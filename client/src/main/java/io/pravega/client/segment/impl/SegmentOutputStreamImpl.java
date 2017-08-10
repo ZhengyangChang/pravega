@@ -396,6 +396,7 @@ class SegmentOutputStreamImpl implements SegmentOutputStream {
      * Establish a connection and wait for it to be setup. (Retries built in)
      */
     CompletableFuture<ClientConnection> getConnection() throws SegmentSealedException {
+        log.debug("GetConnection Invoked, segmentName:{} writerID:{} ", segmentName, writerId);
         checkState(!state.isClosed(), "LogOutputStream was already closed");
         if (state.isAlreadySealed()) {
             throw new SegmentSealedException(this.segmentName);
@@ -452,11 +453,13 @@ class SegmentOutputStreamImpl implements SegmentOutputStream {
     
     @VisibleForTesting
     void reconnect() {
+        log.debug("Reconnect invoked, Segment: {}, writerID: {}", segmentName, writerId);
         state.setupConnection.registerAndRunReleaser(() -> {
             Retry.indefinitelyWithExpBackoff(retrySchedule.getInitialMillis(), retrySchedule.getMultiplier(),
                                              retrySchedule.getMaxDelay(),
                                              t -> log.warn(writerId + " Failed to connect: ", t))
                  .runAsync(() -> {
+                     log.debug("Running Releaser for segment:{} writerID: {}", segmentName, writerId);
                      if (state.isClosed() || state.isAlreadySealed()) {
                          return CompletableFuture.completedFuture(null);
                      }
