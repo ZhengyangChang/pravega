@@ -192,6 +192,11 @@ project('segmentstore:storage:impl') {
         testCompile project(':test:testcommon')
         testCompile project(path:':segmentstore:storage', configuration:'testRuntime')
     }
+    test {
+        onlyIf {
+            project.hasProperty("enableTests")
+        }
+    }
 }
 
 project('segmentstore:server') {
