@@ -11,6 +11,7 @@ package io.pravega.client.netty.impl;
 
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -141,8 +142,11 @@ public final class ConnectionFactoryImpl implements ConnectionFactory {
     public void close() {
         if (closed.compareAndSet(false, true)) {
             // Shut down the event loop to terminate all threads.
+            log.debug("Shutting down Event loop group");
             group.shutdownGracefully();
-            executor.shutdown();
+            log.debug("Shutting down internal client internal executor");
+            final List<Runnable> waitingTasks = executor.shutdownNow();
+            log.debug("Number of tasks waiting tasks for internal executor is {}", waitingTasks.size());
         }
     }
 
