@@ -55,8 +55,12 @@ public final class ConnectionFactoryImpl implements ConnectionFactory {
     private EventLoopGroup group;
     private boolean nio = false;
     private final AtomicBoolean closed = new AtomicBoolean(false);
+    //    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(
+    //            Runtime.getRuntime().availableProcessors(),
+    //            new ThreadFactoryBuilder().setNameFormat("clientInternal-%d").build());
+    //Number of writers = 5  + adding an additional 5 threads.
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(
-            Runtime.getRuntime().availableProcessors(),
+            10,
             new ThreadFactoryBuilder().setNameFormat("clientInternal-%d").build());
 
     /**
