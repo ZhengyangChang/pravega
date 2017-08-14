@@ -60,7 +60,7 @@ public final class ConnectionFactoryImpl implements ConnectionFactory {
     //            new ThreadFactoryBuilder().setNameFormat("clientInternal-%d").build());
     //Number of writers = 5  + adding an additional 5 threads.
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(
-            10,
+            20,
             new ThreadFactoryBuilder().setNameFormat("clientInternal-%d").build());
 
     /**
