@@ -192,6 +192,11 @@ project('segmentstore:storage:impl') {
         testCompile project(':test:testcommon')
         testCompile project(path:':segmentstore:storage', configuration:'testRuntime')
     }
+    test {
+        onlyIf {
+            project.hasProperty("enableTests")
+        }
+    }
 }
 
 project('segmentstore:server') {
@@ -201,6 +206,11 @@ project('segmentstore:server') {
         compile project(':segmentstore:storage')
         compile project(':shared:metrics')
         testCompile project(':test:testcommon')
+    }
+    test {
+        onlyIf {
+            project.hasProperty("enableTests")
+        }
     }
 }
 
@@ -252,6 +262,12 @@ project('segmentstore:server:host') {
 
     applicationDistribution.into("bin") {
         from(createAppWithGCLogging)
+    }
+
+    test {
+        onlyIf {
+            project.hasProperty("enableTests")
+        }
     }
 }
 
@@ -336,6 +352,12 @@ project('test:integration') {
         classpath = sourceSets.main.runtimeClasspath
         standardInput = System.in
     }
+
+    test {
+        onlyIf {
+            project.hasProperty("enableTests")
+        }
+    }
 }
 
 project('shared:controller-api') {
@@ -413,6 +435,12 @@ project('controller') {
 
     applicationDistribution.into("bin") {
         from(createAppWithGCLogging)
+    }
+
+    test {
+        onlyIf {
+            project.hasProperty("enableTests")
+        }
     }
 }
 
