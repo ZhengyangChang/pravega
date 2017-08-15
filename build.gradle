@@ -137,6 +137,12 @@ project('client') {
         failOnError = false
         exclude "**/impl/**";
     }
+
+    test {
+        onlyIf {
+            project.hasProperty("enableTests")
+        }
+    }
 }
 project('test:testcommon') {
     dependencies {
