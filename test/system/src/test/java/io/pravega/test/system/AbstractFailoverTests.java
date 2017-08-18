@@ -378,8 +378,10 @@ abstract class AbstractFailoverTests {
         List<Map.Entry<Integer, Integer>> result = testState.countMap.entrySet().stream().filter(integerIntegerEntry ->
             integerIntegerEntry.getValue() != 1).collect(Collectors.toList());
 
-        result.forEach( i ->   log.info("key: {}, value: {}", i.getKey(), i.getValue()));
+        for(int i = 0; i < result.size(); i++){
+            log.info("key: {}, value: {}", result.get(i).getKey(), result.get(i).getValue());
 
+        }
         log.info("All writers and readers have stopped. Event Written Count:{}, Event Read " +
                 "Count: {}", testState.eventWriteCount.get(), testState.eventReadCount.get());
         assertEquals(testState.eventWriteCount.get(), testState.eventReadCount.get());
