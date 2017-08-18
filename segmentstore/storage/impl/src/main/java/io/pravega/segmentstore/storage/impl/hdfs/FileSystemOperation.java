@@ -223,7 +223,7 @@ abstract class FileSystemOperation<T> {
                 .close();
         setBooleanAttributeValue(path, SEALED_ATTRIBUTE, false);
         log.debug("Created '{}'.", path);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             log.debug("Caught exception while creating file in HDFS: ", e);
             throw e;
         }
