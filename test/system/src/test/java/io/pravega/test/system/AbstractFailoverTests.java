@@ -197,14 +197,14 @@ abstract class AbstractFailoverTests {
                 try {
                     final Integer longEvent = reader.readNextEvent(SECONDS.toMillis(5)).getEvent();
                     log.debug("Reading event {}", longEvent);
-                    testState.countMap.compute(longEvent, (x, y) -> {
-                        if (y != null) {
-                            return y+1;
-                        } else {
-                            return 1;
-                        }
-                    });
                     if (longEvent != null) {
+                        testState.countMap.compute(longEvent, (x, y) -> {
+                            if (y != null) {
+                                return y+1;
+                            } else {
+                                return 1;
+                            }
+                        });
                         //update if event read is not null.
                         testState.eventsReadFromPravega.add(longEvent);
                         testState.eventReadCount.incrementAndGet();
