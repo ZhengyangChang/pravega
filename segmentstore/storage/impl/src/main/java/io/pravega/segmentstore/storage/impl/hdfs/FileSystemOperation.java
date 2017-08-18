@@ -211,6 +211,7 @@ abstract class FileSystemOperation<T> {
     void createEmptyFile(Path path) throws IOException {
         log.debug("Going to create file in HDFS");
         try {
+        log.debug("Creating '{}'.", path);
         this.context.fileSystem
                 .create(path,
                         READWRITE_PERMISSION,
