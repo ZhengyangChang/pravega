@@ -378,7 +378,7 @@ abstract class AbstractFailoverTests {
         List<Map.Entry<Integer, Integer>> result = testState.countMap.entrySet().stream().filter(integerIntegerEntry ->
             integerIntegerEntry.getValue() != 1).collect(Collectors.toList());
 
-        for(int i = 0; i < result.size(); i++){
+        for (int i = 0; i < result.size(); i++) {
             log.info("key: {}, value: {}", result.get(i).getKey(), result.get(i).getValue());
 
         }
