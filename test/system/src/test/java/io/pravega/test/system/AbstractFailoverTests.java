@@ -86,6 +86,7 @@ abstract class AbstractFailoverTests {
         final List<CompletableFuture<Void>> writersListComplete = new ArrayList<>();
         final CompletableFuture<Void> writersComplete = new CompletableFuture<>();
         final CompletableFuture<Void> newWritersComplete = new CompletableFuture<>();
+        final List<CompletableFuture<Void>> readersListComplete = new ArrayList<>();
         final CompletableFuture<Void> readersComplete = new CompletableFuture<>();
         final ConcurrentHashMap<Integer, Integer> countMap = new ConcurrentHashMap<>();
     }
@@ -286,6 +287,7 @@ abstract class AbstractFailoverTests {
 
     void createReaders(ClientFactory clientFactory, String readerGroupName, String scope,
                                  ReaderGroupManager readerGroupManager, String stream, final int readers) {
+        Preconditions.checkNotNull(testState.readersListComplete.get(0));
         log.info("Creating Reader group: {}, with readergroup manager using scope: {}", readerGroupName, scope);
         readerGroupManager.createReaderGroup(readerGroupName, ReaderGroupConfig.builder().startingTime(0).build(),
                 Collections.singleton(stream));
@@ -311,7 +313,7 @@ abstract class AbstractFailoverTests {
                 readerFutureList.add(readerFuture);
             }
         });
-        FutureHelpers.completeAfter(() -> FutureHelpers.allOf(readerFutureList), testState.readersComplete);
+        FutureHelpers.completeAfter(() -> FutureHelpers.allOf(readerFutureList), testState.readersListComplete.get(0));
         FutureHelpers.exceptionListener(testState.readersComplete,
                                         t -> log.error("Exception while waiting for all readers to complete", t));
     }
@@ -364,7 +366,7 @@ abstract class AbstractFailoverTests {
         testState.stopReadFlag.set(true);
 
         log.info("Wait for readers execution to complete");
-        if (!FutureHelpers.await(testState.readersComplete)) {
+        if (!FutureHelpers.await(FutureHelpers.allOf(testState.readersListComplete))) {
             log.error("Readers stopped with exceptions");
         }
         //check for exceptions during read

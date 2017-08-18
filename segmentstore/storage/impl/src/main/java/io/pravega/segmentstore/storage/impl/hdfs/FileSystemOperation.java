@@ -209,6 +209,8 @@ abstract class FileSystemOperation<T> {
      * @throws IOException If an exception occurred.
      */
     void createEmptyFile(Path path) throws IOException {
+        log.debug("Going to create file in HDFS");
+        try {
         this.context.fileSystem
                 .create(path,
                         READWRITE_PERMISSION,
@@ -220,6 +222,10 @@ abstract class FileSystemOperation<T> {
                 .close();
         setBooleanAttributeValue(path, SEALED_ATTRIBUTE, false);
         log.debug("Created '{}'.", path);
+        } catch (Exception e) {
+            log.debug("Caught exception while creating file in HDFS: ", e);
+            throw e;
+        }
     }
 
     /**
